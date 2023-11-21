@@ -1,0 +1,18 @@
+<Project>
+	
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Platform>AnyCPU</Platform>
+		<Version>4.0</Version>
+		<UserSecretsId>FastclockSecrets</UserSecretsId>
+		<NeutralLanguage>en-150</NeutralLanguage>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+	</PropertyGroup>
+
+</Project>

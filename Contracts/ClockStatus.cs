@@ -1,10 +1,12 @@
-﻿namespace Fastclock.Contracts;
+﻿using Fastclock.Contracts.Models;
+
+namespace Fastclock.Contracts;
 
 /// <summary>
 /// Data for presentation of clock time and status.
 /// All data is in English-only. It is the clients responibility to make translations.
 /// </summary>
-public class ClockStatus
+public record ClockStatus
 {
     /// <summary>
     /// Name of selected clock.
@@ -13,43 +15,35 @@ public class ClockStatus
     /// <summary>
     /// Name of game weekday or empty.
     /// </summary>
-    public string Weekday { get; set; } = string.Empty;
+    public Weekday Weekday { get; set; }
+    /// <summary>
+    /// The type of time that is provided
+    /// </summary>
+    public ClockMode ClockMode { get; set; }
     /// <summary>
     /// Current time to display. The type of time is dependent of <see cref="IsRealtime"/>.
     /// </summary>
-    public string Time { get; set; } = string.Empty;
+    public TimeOnly Time { get; set; }
     /// <summary>
     /// Game duration in hours (with decimals).
     /// </summary>
-    public double Duration { get; set; }
+    public TimeSpan Duration { get; set; }
+    /// <summary>
+    /// Clock speed where values over 1 is faster than real time.
+    /// </summary>
+    public double Speed { get; set; }
     /// <summary>
     /// True if clock is running. This is always true if clock is running in realtime.
     /// </summary>
     public bool IsRunning { get; set; }
     /// <summary>
-    /// Indicates that the clock <see cref="Time"/> is in realtime; otherwise it is running in game time.
-    /// </summary>
-    public bool IsRealtime { get; set; }
-    /// <summary>
-    /// True if clock is running in fast time mode.
-    /// </summary>
-    public bool IsFastTime => !IsRealtime;
-    /// <summary>
     /// True if game time has reached the end time. Always false when running in realtime.
     /// </summary>
     public bool IsCompleted { get; set; }
     /// <summary>
-    /// True if clock has started.
+    /// True if clock has been initially started.
     /// </summary>
     public bool IsElapsed { get; set; }
-    /// <summary>
-    /// Eventually manual entered message by the administrator to display.
-    /// </summary>
-    public string Message { get; set; } = string.Empty;
-    /// <summary>
-    /// Clock speed where values over 1 is faster than real time.
-    /// </summary>
-    public double Speed { get; set; }
     /// <summary>
     /// Shoud be set to true when API-data not is available.
     /// </summary>
@@ -57,11 +51,11 @@ public class ClockStatus
     /// <summary>
     /// Forecasted real end time of game- Includes time of pause if pause times have been set.
     /// </summary>
-    public string RealEndTime { get; set; } = string.Empty;
+    public TimeOnly RealEndTime { get; set; }
     /// <summary>
     /// Game end time.
     /// </summary>
-    public string FastEndTime { get; set; } = string.Empty;
+    public TimeOnly FastEndTime { get; set; }
     /// <summary>
     /// True if game time is paused. It is recommended to present when and why the game is paused and will resume.
     /// </summary>
@@ -69,15 +63,15 @@ public class ClockStatus
     /// <summary>
     /// Reason for pause. These are from the set of values in <see cref="PauseReason"/>.
     /// </summary>
-    public string PauseReason { get; set; } = string.Empty;
+    public PauseReason PauseReason { get; set; }
     /// <summary>
     /// Real time when pause starts.
     /// </summary>
-    public string PauseTime { get; set; } = string.Empty;
+    public TimeOnly? PauseTime { get; set; }
     /// <summary>
     /// Expected real time when game will resume or empty.
     /// </summary>
-    public string ExpectedResumeTimeAfterPause { get; set; } = string.Empty;
+    public TimeOnly? ExpectedResumeTimeAfterPause { get; set; }
     /// <summary>
     /// Name of user or station that have stopped the game time.
     /// </summary>
@@ -85,8 +79,11 @@ public class ClockStatus
     /// <summary>
     /// Reason for stopping game time. These are from the set of values in <see cref="StoppingReason"/>.
     /// </summary>
-    public string StoppingReason { get; set; } = string.Empty;
+    public StopReason StoppingReason { get; set; }
     /// <summary>
+    /// Eventually manual entered message by the administrator to display.
+    /// </summary>
+    public string? Message { get; set; }
     /// Current server application version. This can be used to verify client application compatibility.
     /// </summary>
     public string ServerVersionNumber { get; set; } = string.Empty;

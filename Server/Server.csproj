@@ -5,6 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Fastclock.Server</AssemblyName>
     <RootNamespace>Fastclock.Server</RootNamespace>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Client\Client.csproj" />

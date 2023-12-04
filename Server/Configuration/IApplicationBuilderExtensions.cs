@@ -2,6 +2,9 @@
 
 namespace Fastclock.Server.Configuration;
 
+/// <summary>
+/// Extensions for building application.
+/// </summary>
 public static class IApplicationBuilderExtensions
 {
     /// <summary>
@@ -13,11 +16,13 @@ public static class IApplicationBuilderExtensions
         app.UseSwaggerUI(c =>
         {
             c.RoutePrefix = "openapi";
-            c.SwaggerEndpoint("/openapi/v3/openapi.json", "Version 3 documentation");
-            c.DocumentTitle = "Tellurian Trains Module Meeting App Open API";
+            c.SwaggerEndpoint("/openapi/v4/openapi.json", "Version 4 documentation");
+            c.DocumentTitle = "Fastclock Open API";
         });
     }
-
+    /// <summary>
+    /// Customisation of localisation.
+    /// </summary>
     public static void UseCustomisedLocalisation(this IApplicationBuilder app)
     {
         app.UseRequestLocalization(options =>

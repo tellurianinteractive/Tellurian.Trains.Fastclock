@@ -12,7 +12,7 @@ public static class LanguageExtensions
     public static bool IsDefaultLanguage => DefaultLanguage.IsLanguage();
     public static string DefaultLanguage => "en";
 
-    public static string[] SupportedTwoLetterIsoLanguages => LanguageToTwoLetterISOLanguageNameMap.Values.ToArray();
+    public static string[] SupportedTwoLetterIsoLanguages => [.. LanguageToTwoLetterISOLanguageNameMap.Values];
 
     private static IDictionary<Language, string> LanguageToTwoLetterISOLanguageNameMap =>
          new Dictionary<Language, string>() {

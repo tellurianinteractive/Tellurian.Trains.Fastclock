@@ -8,10 +8,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddSwagger();
 
 var app = builder.Build();
+
 var httpsDisabled = app.Configuration.GetValue("DisableHttps", false);
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -19,7 +18,6 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     if(!httpsDisabled) app.UseHsts();
 }
 app.UseCustomisedSwagger();

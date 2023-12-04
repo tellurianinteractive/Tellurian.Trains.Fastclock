@@ -16,6 +16,6 @@ public static class TimespanExtensions
         return string.Empty;
     }
 
-    public static TimeSpan? AsTotalHours(this double? hours) =>
-        hours.HasValue ? TimeSpan.FromHours(hours.Value) : null;
+    public static TimeSpan AsTotalHours(this double hours) =>
+        TimeSpan.FromHours(hours);
 }

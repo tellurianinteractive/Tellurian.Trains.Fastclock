@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Fastclock.Contracts.Models;
 using Fastclock.Contracts.Resources;
 
 namespace Fastclock.Contracts;
 
-public class ClockSettings
+public record ClockSettings
 {
     public const string UnknownUserName = "Unknown";
     public const string DemoClockName = "Demo";
@@ -16,7 +17,7 @@ public class ClockSettings
     /// </summary>
     [Display(Name = "ClockName", ResourceType = typeof(Strings))]
     [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Strings))]
-    public string? Name { get; set; } = DemoClockName;
+    public string Name { get; set; } = DemoClockName;
     /// <summary>
     /// True if clock should resume game from start time.
     /// </summary>
@@ -43,36 +44,36 @@ public class ClockSettings
     [Display(Name = nameof(StartTime), ResourceType = typeof(Strings))]
     [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Strings))]
     [RegularExpression("(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessageResourceName = "InvalidTime", ErrorMessageResourceType = typeof(Strings))]
-    public string StartTime { get; set; } = string.Empty;
+    public TimeOnly StartTime { get; set; }
     /// <summary>
     /// The game time speed. Decimal value.
     /// </summary>
     [Display(Name = nameof(Speed), ResourceType = typeof(Strings))]
     [Range(1.0, 7.0, ErrorMessageResourceName = "InvalidRange", ErrorMessageResourceType = typeof(Strings))]
-    public double? Speed { get; set; } = 6;
+    public double Speed { get; set; }
     /// <summary>
     /// Duration of the game in hours (with decimals).
     /// </summary>
     [Display(Name = nameof(DurationHours), ResourceType = typeof(Strings))]
     [Range(1.0, 168.0, ErrorMessageResourceName = "InvalidRange", ErrorMessageResourceType = typeof(Strings))]
-    public double? DurationHours { get; set; } = 12;
+    public TimeSpan DurationHours { get; set; }
     /// <summary>
     /// Real time when pause starts.
     /// </summary>
     [Display(Name = nameof(PauseTime), ResourceType = typeof(Strings))]
     [RegularExpression("(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessageResourceName = "InvalidTime", ErrorMessageResourceType = typeof(Strings))]
-    public string PauseTime { get; set; } = string.Empty;
+    public TimeOnly? PauseTime { get; set; }
     /// <summary>
     /// Real time when pause starts.
     /// </summary>
     [Display(Name = nameof(PauseReason), ResourceType = typeof(Strings))]
-    public string PauseReason { get; set; } = "0";
+    public PauseReason PauseReason { get; set; }
     /// <summary>
     /// Expected real time when game will resume or empty.
     /// </summary>
     [Display(Name = nameof(ExpectedResumeTime), ResourceType = typeof(Strings))]
     [RegularExpression("(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessageResourceName = "InvalidTime", ErrorMessageResourceType = typeof(Strings))]
-    public string ExpectedResumeTime { get; set; } = string.Empty;
+    public TimeOnly? ExpectedResumeTime { get; set; }
     /// <summary>
     /// True if real time should be shown during pause.
     /// </summary>
@@ -83,7 +84,7 @@ public class ClockSettings
     /// </summary>
     [Display(Name = nameof(OverriddenElapsedTime), ResourceType = typeof(Strings))]
     [RegularExpression("(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessageResourceName = "InvalidTime", ErrorMessageResourceType = typeof(Strings))]
-    public string OverriddenElapsedTime { get; set; } = string.Empty;
+    public TimeOnly? OverriddenElapsedTime { get; set; }
     /// <summary>
     /// Eventually manual entered message by the administrator to display.
     /// </summary>
@@ -91,7 +92,7 @@ public class ClockSettings
     [StringLength(100, ErrorMessageResourceName = "InvalidString", ErrorMessageResourceType = typeof(Strings))]
     public string Message { get; set; } = string.Empty;
     [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Strings))]
-    public string Mode { get; set; } = "0";
+    public ClockMode Mode { get; set; }
     /// <summary>
     /// Clock administrator password.
     /// </summary>

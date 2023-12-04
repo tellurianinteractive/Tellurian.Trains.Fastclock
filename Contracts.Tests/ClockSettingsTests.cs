@@ -1,6 +1,5 @@
 using Fastclock.Contracts;
 using Fastclock.Contracts.Extensions;
-using Fastclock.Contracts.Models;
 
 namespace Contracts.Tests;
 
@@ -14,20 +13,20 @@ public class ClockSettingsTests
             """
             {
               "name": "Demo",
-              "shouldRestart": false,
+              "mode": "Fast",
+              "shouldReset": false,
               "isElapsed": false,
               "isRunning": false,
-              "startWeekday": "0",
+              "startWeekday": "None",
               "startTime": "06:00:00",
               "speed": 5.5,
-              "durationHours": "15:00:00",
+              "duration": "15:00:00",
               "pauseTime": "12:00:00",
               "pauseReason": "Lunch",
-              "expectedResumeTime": null,
-              "showRealTimeWhenPaused": false,
+              "resumeAfterPauseTime": null,
+              "showRealtimeDuringPause": false,
               "overriddenElapsedTime": null,
-              "message": "",
-              "mode": "Fast",
+              "message": null,
               "administratorPassword": "password",
               "userPassword": "password"
             }
@@ -43,15 +42,13 @@ public class ClockSettingsTests
         new()
         {
             AdministratorPassword = "password",
-            DurationHours = (15.0).AsTotalHours(),
+            Duration = (15.0).AsTotalHours(),
             Mode = ClockMode.Fast,
             Name = "Demo",
             Speed = 5.5,
             UserPassword = "password",
             StartTime = new TimeOnly(6, 0),
-            StartWeekday = "0",
             PauseReason = PauseReason.Lunch,
-            Message = "",
             PauseTime = new TimeOnly(12, 0)
         };
  

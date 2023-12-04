@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Fastclock.Contracts.Models;
+namespace Fastclock.Contracts;
 
 [JsonConverter(typeof(JsonStringEnumConverter<StopReason>))]
 public enum StopReason

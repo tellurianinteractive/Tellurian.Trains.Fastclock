@@ -1,5 +1,4 @@
 ﻿using Fastclock.Contracts.Extensions;
-using Fastclock.Contracts.Models;
 
 namespace Fastclock.Contracts.Tests;
 

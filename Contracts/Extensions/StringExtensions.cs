@@ -1,16 +1,22 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace Fastclock.Contracts.Extensions;
 
 public static class StringExtensions
 {
-    public static bool HasValue(this string me) =>
-        !string.IsNullOrWhiteSpace(me);
+    public static bool HasValue([NotNullWhen(true)] this string? value) =>
+        !string.IsNullOrWhiteSpace(value);
+
+    public static bool IsSameAs(this string? value, string? other) =>
+        value?.Equals(other, StringComparison.OrdinalIgnoreCase) == true;
+    public static bool IsNotSameAs(this string? value, string? other) =>
+        value?.Equals(other, StringComparison.OrdinalIgnoreCase) != true;
 
     public static TimeSpan? ToTimeSpanOrNull(this string value) =>
         TimeSpan.TryParse(value, out var duration) ? duration : null;
 
-    public static TimeOnly ToTimeOnly(this string value) => 
+    public static TimeOnly ToTimeOnly(this string value) =>
         TimeOnly.TryParse(value, out var time) ? time : TimeOnly.MinValue;
 
 

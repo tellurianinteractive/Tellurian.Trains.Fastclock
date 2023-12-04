@@ -1,28 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Fastclock.Contracts.Models;
 using Fastclock.Contracts.Resources;
 
 namespace Fastclock.Contracts;
 
 public record ClockSettings
 {
-    public const string UnknownUserName = "Unknown";
-    public const string DemoClockName = "Demo";
-    public const string DemoClockPassword = "password";
-    public const string DefaultTheme = "Dark";
-    public const string DefaultDisplay = "Digital";
 
     /// <summary>
     /// Name of clock. If a non-extisting clock name is given, a new clock instance is created.
     /// </summary>
     [Display(Name = "ClockName", ResourceType = typeof(Strings))]
     [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Strings))]
-    public string Name { get; set; } = DemoClockName;
+    public string Name { get; set; } = string.Empty;
+    /// <summary>
+    /// Type of time to display.
+    /// </summary>
+    [Display(Name = "ClockMode", ResourceType = typeof(Strings))]
+    [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Strings))]
+    public ClockMode Mode { get; set; }
     /// <summary>
     /// True if clock should resume game from start time.
     /// </summary>
-    [Display(Name = nameof(ShouldRestart), ResourceType = typeof(Strings))]
-    public bool ShouldRestart { get; set; }
+    [Display(Name = nameof(ShouldReset), ResourceType = typeof(Strings))]
+    public bool ShouldReset { get; set; }
     /// <summary>
     /// True if current game time is later than game start time.
     /// </summary>
@@ -37,7 +37,7 @@ public record ClockSettings
     /// The weekday that the game should start at. Weekdays are defined in <see cref="Weekday"/>.
     /// </summary>
     [Display(Name = nameof(StartWeekday), ResourceType = typeof(Strings))]
-    public string StartWeekday { get; set; } = "0";
+    public Weekday StartWeekday { get; set; }
     /// <summary>
     /// The game start time.
     /// </summary>
@@ -54,9 +54,9 @@ public record ClockSettings
     /// <summary>
     /// Duration of the game in hours (with decimals).
     /// </summary>
-    [Display(Name = nameof(DurationHours), ResourceType = typeof(Strings))]
+    [Display(Name = nameof(Duration), ResourceType = typeof(Strings))]
     [Range(1.0, 168.0, ErrorMessageResourceName = "InvalidRange", ErrorMessageResourceType = typeof(Strings))]
-    public TimeSpan DurationHours { get; set; }
+    public TimeSpan Duration { get; set; }
     /// <summary>
     /// Real time when pause starts.
     /// </summary>
@@ -71,14 +71,14 @@ public record ClockSettings
     /// <summary>
     /// Expected real time when game will resume or empty.
     /// </summary>
-    [Display(Name = nameof(ExpectedResumeTime), ResourceType = typeof(Strings))]
+    [Display(Name = nameof(ResumeAfterPauseTime), ResourceType = typeof(Strings))]
     [RegularExpression("(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessageResourceName = "InvalidTime", ErrorMessageResourceType = typeof(Strings))]
-    public TimeOnly? ExpectedResumeTime { get; set; }
+    public TimeOnly? ResumeAfterPauseTime { get; set; }
     /// <summary>
     /// True if real time should be shown during pause.
     /// </summary>
-    [Display(Name = nameof(ShowRealTimeWhenPaused), ResourceType = typeof(Strings))]
-    public bool ShowRealTimeWhenPaused { get; set; }
+    [Display(Name = nameof(ShowRealtimeDuringPause), ResourceType = typeof(Strings))]
+    public bool ShowRealtimeDuringPause { get; set; }
     /// <summary>
     /// Option to change the current elapsed game time, for example if clock is stopped to late and game time have to be set back in time.
     /// </summary>
@@ -90,16 +90,14 @@ public record ClockSettings
     /// </summary>
     [Display(Name = nameof(Message), ResourceType = typeof(Strings))]
     [StringLength(100, ErrorMessageResourceName = "InvalidString", ErrorMessageResourceType = typeof(Strings))]
-    public string Message { get; set; } = string.Empty;
-    [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Strings))]
-    public ClockMode Mode { get; set; }
-    /// <summary>
+    public string? Message { get; set; } 
+   /// <summary>
     /// Clock administrator password.
     /// </summary>
     [Display(Name = nameof(AdministratorPassword), ResourceType = typeof(Strings))]
     [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Strings))]
     [StringLength(10, ErrorMessageResourceName = "InvalidString", ErrorMessageResourceType = typeof(Strings))]
-    public string AdministratorPassword { get; set; } = DemoClockPassword;
+    public string? AdministratorPassword { get; set; }
     /// <summary>
     /// User administrator password.
     /// </summary>

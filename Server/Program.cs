@@ -9,7 +9,7 @@ builder.Services.AddSwagger();
 
 var app = builder.Build();
 
-var httpsDisabled = app.Configuration.GetValue("DisableHttps", false);
+var isHttpsDisabled = app.Configuration.GetValue("DisableHttps", false);
 
 if (app.Environment.IsDevelopment())
 {
@@ -18,12 +18,12 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    if(!httpsDisabled) app.UseHsts();
+    if(!isHttpsDisabled) app.UseHsts();
 }
 app.UseCustomisedSwagger();
 app.UseCustomisedLocalisation();
 
-if (!httpsDisabled) app.UseHttpsRedirection();
+if (!isHttpsDisabled) app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
@@ -33,6 +33,7 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
-app.Logger.LogInformation("App version {version} starting at {time}", Assembly.GetExecutingAssembly().GetName().Version, DateTimeOffset.Now.ToString("g"));
+app.Logger.LogInformation("App version {AppVersion} starting at {AppStartTime}", Assembly.GetExecutingAssembly().GetName().Version, DateTimeOffset.Now.ToString("g"));
+if (isHttpsDisabled) app.Logger.LogWarning("HTTPS and HSTS are disabled.");
 
 app.Run();

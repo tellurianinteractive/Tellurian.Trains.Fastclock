@@ -1,6 +1,4 @@
-﻿using Fastclock.Contracts.Models;
-
-namespace Fastclock.Contracts;
+﻿namespace Fastclock.Contracts;
 
 /// <summary>
 /// Data for presentation of clock time and status.

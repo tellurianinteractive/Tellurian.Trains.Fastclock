@@ -1,5 +1,4 @@
-﻿using Fastclock.Contracts.Models;
-using static Fastclock.Contracts.Extensions.EnumExtensions;
+﻿using static Fastclock.Contracts.Extensions.EnumExtensions;
 
 namespace Fastclock.Contracts.Tests;
 

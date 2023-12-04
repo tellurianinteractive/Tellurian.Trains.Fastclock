@@ -1,9 +1,16 @@
 ﻿namespace Fastclock.Contracts;
 
-public class ClockUser
-{
-    public string IPAddress { get; set; } = string.Empty;
-    public string? UserName { get; set; } = string.Empty;
-    public string? ClientVersion { get; set; } = string.Empty;
-    public TimeOnly LastUsedTime { get; set; }
+public record ClockUser
+{ 
+   
+    public void Update(string? userName, string clientVersion)
+    {
+        UserName = userName;
+        ClientVersion = clientVersion;
+    }
+
+    public string? IPAddress { get;  set; }
+    public string? UserName { get;  set; } 
+    public string? ClientVersion { get;  set; } 
+   
 }

@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<AssemblyName>Fastclock.Contracts.Tests</AssemblyName>
-		<RootNamespace>Fastclock.Contracts.Tests</RootNamespace>		
+		<AssemblyName>Fastclock.Server.Tests</AssemblyName>
+		<RootNamespace>Fastclock.Server.Tests</RootNamespace>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
@@ -19,6 +19,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Contracts\Contracts.csproj" />
+		<ProjectReference Include="..\Server\Server.csproj" />
 	</ItemGroup>
 
 </Project>

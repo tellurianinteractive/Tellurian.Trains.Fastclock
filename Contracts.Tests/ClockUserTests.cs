@@ -13,8 +13,7 @@ public class ClockUserTests
             {
               "ipAddress": "127.0.0.0",
               "userName": "Stefan",
-              "clientVersion": "4.0",
-              "lastUsedTime": "12:23:00"
+              "clientVersion": "4.0"
             }
             """;
         var json = Target.ToJson();
@@ -26,6 +25,5 @@ public class ClockUserTests
         IPAddress ="127.0.0.0",
         UserName = "Stefan",        
         ClientVersion= "4.0",
-        LastUsedTime = "12:23".ToTimeOnly(),
     };
 }

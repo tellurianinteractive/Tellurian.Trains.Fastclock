@@ -29,7 +29,7 @@ public record ClockStatus
     /// <summary>
     /// Clock speed where values over 1 is faster than real time.
     /// </summary>
-    public double Speed { get; set; }
+    public Speed Speed { get; set; }
     /// <summary>
     /// True if clock is running. This is always true if clock is running in realtime.
     /// </summary>
@@ -69,11 +69,11 @@ public record ClockStatus
     /// <summary>
     /// Expected real time when game will resume or empty.
     /// </summary>
-    public TimeOnly? ExpectedResumeTimeAfterPause { get; set; }
+    public TimeOnly? ResumeTimeAfterPause { get; set; }
     /// <summary>
     /// Name of user or station that have stopped the game time.
     /// </summary>
-    public string StoppedByUser { get; set; } = string.Empty;
+    public string? StoppedByUser { get; set; }
     /// <summary>
     /// Reason for stopping game time. These are from the set of values in <see cref="StoppingReason"/>.
     /// </summary>

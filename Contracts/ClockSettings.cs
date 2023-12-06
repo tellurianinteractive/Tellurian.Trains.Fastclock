@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿global using Speed = double;
+
+using System.ComponentModel.DataAnnotations;
 using Fastclock.Contracts.Resources;
 
 namespace Fastclock.Contracts;
@@ -27,12 +29,12 @@ public record ClockSettings
     /// True if current game time is later than game start time.
     /// </summary>
     [Display(Name = nameof(IsElapsed), ResourceType = typeof(Strings))]
-    public bool IsElapsed { get; set; }
+    public bool IsElapsed { get; }
     /// <summary>
     /// True if clock is running (or should be running).
     /// </summary>
     [Display(Name = nameof(IsRunning), ResourceType = typeof(Strings))]
-    public bool IsRunning { get; set; }
+    public bool IsRunning { get;  }
     /// <summary>
     /// The weekday that the game should start at. Weekdays are defined in <see cref="Weekday"/>.
     /// </summary>
@@ -50,7 +52,7 @@ public record ClockSettings
     /// </summary>
     [Display(Name = nameof(Speed), ResourceType = typeof(Strings))]
     [Range(1.0, 7.0, ErrorMessageResourceName = "InvalidRange", ErrorMessageResourceType = typeof(Strings))]
-    public double Speed { get; set; }
+    public Speed Speed { get; set; }
     /// <summary>
     /// Duration of the game in hours (with decimals).
     /// </summary>
@@ -104,4 +106,7 @@ public record ClockSettings
     [Display(Name = nameof(UserPassword), ResourceType = typeof(Strings))]
     [StringLength(10, ErrorMessageResourceName = "InvalidString", ErrorMessageResourceType = typeof(Strings))]
     public string UserPassword { get; set; } = string.Empty;
+
+    [Display(Name = nameof(TimeZoneId), ResourceType = typeof(Strings))]
+    public string? TimeZoneId { get; set; }
 }

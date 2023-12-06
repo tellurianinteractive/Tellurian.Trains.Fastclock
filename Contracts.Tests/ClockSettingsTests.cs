@@ -28,7 +28,8 @@ public class ClockSettingsTests
               "overriddenElapsedTime": null,
               "message": null,
               "administratorPassword": "password",
-              "userPassword": "password"
+              "userPassword": "password",
+              "timeZoneId": null
             }
             """;
         var json = Target.ToJson();

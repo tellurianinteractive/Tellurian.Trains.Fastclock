@@ -19,3 +19,8 @@ public static class TimespanExtensions
     public static TimeSpan AsTotalHours(this double hours) =>
         TimeSpan.FromHours(hours);
 }
+
+public static class TimeOnlyExtensions
+{
+
+}

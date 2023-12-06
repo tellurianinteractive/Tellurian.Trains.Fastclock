@@ -11,8 +11,8 @@ public interface IClock
 
     bool UpdateSettings(string? ipAddress, string? username, string? password, ClockSettings settings);
     bool UpdateUser(string? ipAddress, string? username, string clientVersion = "");
-    bool IsUser(string? password);
+    bool IsUser(string? password, bool requirePassword = false);
     bool IsAdministrator(string? password);
-    bool TryStartTick(string? userName, string? password);
-    bool TryStopTick(string? userName, string? password, StopReason reason);
+    bool TryStartTick(string userName, string? password);
+    bool TryStopTick(string userName, string? password, StopReason reason);
 }

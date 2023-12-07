@@ -4,7 +4,7 @@ using Fastclock.Contracts;
 namespace Fastclock.Server.Clocks;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-public class ClockConfiguration
+public record ClockConfiguration
 {
     public required string Name { get; set; }
     public required string Password { get; set; }

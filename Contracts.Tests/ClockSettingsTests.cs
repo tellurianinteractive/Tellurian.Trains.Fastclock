@@ -9,7 +9,7 @@ public class ClockSettingsTests
     [TestMethod]
     public void SerializationAndDeseriaizationWorks()
     {
-        var expected =
+        string? expected =
             """
             {
               "name": "Demo",

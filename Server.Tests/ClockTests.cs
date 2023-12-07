@@ -4,6 +4,7 @@ using Fastclock.Server.Clocks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Fastclock.Contracts.Extensions.TimeZoneInfoExtensions;
 
 namespace Fastclock.Server.Tests;
@@ -11,12 +12,12 @@ namespace Fastclock.Server.Tests;
 [TestClass]
 public class ClockTests
 {
-    readonly IOptions<ClockConfiguration> Options = Microsoft.Extensions.Options.Options.Create(ClockConfiguration);
+    readonly IOptions<ClockConfiguration> ClockOptions = Options.Create(ClockConfiguration);
     readonly ILogger<Clock> Logger = new NullLogger<Clock>();
     [TestMethod]
     public void AddsNewUser()
     {
-        var target = new Clock(Options, Logger);
+        var target = CreateClock(ClockConfiguration);
         target.UpdateUser("192.168.1.2", "Stefan", "1.2.3");
         var user = target.ClockUsers.Single(cu => cu.UserName == "Stefan");
         Assert.AreEqual("Stefan", user.UserName);
@@ -28,7 +29,7 @@ public class ClockTests
     [TestMethod]
     public async Task UpdatesUser()
     {
-        var target = new Clock(Options, Logger);
+        var target = CreateClock(ClockConfiguration);
         target.UpdateUser("192.168.1.2", "Stefan", "1.2.3");
         await Task.Delay(5);
         target.UpdateUser("192.168.1.2", "Stefan", "1.2.3");
@@ -40,7 +41,7 @@ public class ClockTests
     [TestMethod]
     public async Task UpdatesUnknownUser()
     {
-        var target = new Clock(Options, Logger);
+        var target = CreateClock(ClockConfiguration);
         target.UpdateUser("192.168.1.2", null, "1.2.3");
         await Task.Delay(1);
         target.UpdateUser("192.168.1.2", "Stefan", "1.2.3");
@@ -53,32 +54,51 @@ public class ClockTests
     public void ClockFromConfiguration()
     {
         var now = CreateTimeZoneInfo().Now();
-        var target = new Clock(Options, Logger);
+        var target = CreateClock(ClockConfiguration);
         var status = target.Status;
         Assert.AreEqual("Demo", status.Name);
-        Assert.AreEqual("06:00".ToTimeOnly(), status.Time);
-        Assert.AreEqual(15.0, status.Duration.TotalHours);
-        Assert.AreEqual(5.5, status.Speed);
-        Assert.AreEqual("21:00".ToTimeOnly(), status.FastEndTime);
-        Assert.AreEqual(new TimeOnly(now.Hour, now.Minute).Add(TimeSpan.FromHours(status.Duration.TotalHours / status.Speed)), status.RealEndTime);
-        Assert.AreEqual(Weekday.Thursday, status.Weekday);
+        Assert.AreEqual("06:00".ToTimeOnly(), status.Session.Time);
+        Assert.AreEqual(15.0, status.Session.Duration.TotalHours);
+        Assert.AreEqual(5.5, status.Session.Speed);
+        Assert.AreEqual("21:00".ToTimeOnly(), status.Session.FastEndTime);
+        Assert.AreEqual(new TimeOnly(now.Hour, now.Minute).Add(TimeSpan.FromHours(status.Session.Duration.TotalHours / status.Session.Speed)), status.Session.RealEndTime);
+        Assert.AreEqual(Weekday.Thursday, status.Session.Weekday);
     }
 
     [TestMethod]
     public void DemoClockAfterSettingsUpdate()
     {
         var now = CreateTimeZoneInfo().Now();
-        var target = new Clock(Options, Logger);
+        var target = CreateClock(ClockConfiguration);
         var updated = target.UpdateSettings("192.168.1.2", "Stefan", "password", ClockSettings with { Name="Demo", AdministratorPassword="password"});
         Assert.IsTrue(updated, "Not updated.");
-        Assert.AreEqual("password", target.AdministratorPassword);
-        Assert.AreEqual("", target.UserPassword);
-        Assert.AreEqual("07:00".ToTimeOnly(), target.Time);
-        Assert.AreEqual(12.0, target.SessionDuration.TotalHours);
-        Assert.AreEqual(4.0, target.Speed);
-        Assert.AreEqual("19:00".ToTimeOnly(), target.FastEndTime);
-        Assert.AreEqual(new TimeOnly(now.Hour, now.Minute).Add(TimeSpan.FromHours(target.SessionDuration.TotalHours / target.Speed + 1)), target.RealEndTime);
+        var settings = target.Settings;
+        var status = target.Status;
+        Assert.AreEqual("password", settings.AdministratorPassword);
+        Assert.AreEqual("", settings.UserPassword);
+        Assert.AreEqual("07:00".ToTimeOnly(), status.Session.Time);
+        Assert.AreEqual(12.0, status.Session.Duration.TotalHours);
+        Assert.AreEqual(4.0, status.Session.Speed);
+        Assert.AreEqual("19:00".ToTimeOnly(), status.Session.FastEndTime);
+        Assert.AreEqual(new TimeOnly(now.Hour, now.Minute).Add(TimeSpan.FromHours(status.Session.Duration.TotalHours / status.Session.Speed + 1)), status.Session.RealEndTime);
     }
+
+    [TestMethod]
+    public async Task RunDemoClockFromConfiguration()
+    {
+        var target = CreateClock(ClockConfiguration with { Speed=10});
+        target.TryStartTick("Stefan", "password");
+        await Task.Delay(6500);
+        Assert.IsTrue(((Clock)target).IsRunning);
+        target.TryStopTick("Stefan", "password", StopReason.None);
+        Assert.IsTrue(((Clock)target).IsElapsed, "Not elapsed.");
+        Assert.IsTrue(((Clock)target).IsStopped, "Not stopped.");
+        var status = target.Status;
+        Assert.AreEqual("06:01".ToTimeOnly(), status.Session.Time);
+
+    }
+
+    private IClock CreateClock(ClockConfiguration configuration) => new Clock(Options.Create(configuration), Logger);
 
     private static ClockConfiguration ClockConfiguration { get; } = new()
     {

@@ -1,6 +1,4 @@
-﻿global using Speed = double;
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Fastclock.Contracts.Resources;
 
 namespace Fastclock.Contracts;

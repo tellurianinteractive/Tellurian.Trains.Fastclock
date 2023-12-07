@@ -12,54 +12,139 @@ public class ClockStatusTests
             """
             {
               "name": "Demo",
-              "weekday": "Wednesday",
-              "clockMode": "Fast",
-              "time": "06:12:00",
-              "duration": "15:00:00",
-              "speed": 5.5,
-              "isRunning": false,
-              "isCompleted": false,
-              "isElapsed": false,
               "isUnavailable": false,
-              "realEndTime": "13:14:00",
-              "fastEndTime": "21:00:00",
-              "isPaused": false,
-              "pauseReason": "Dinner",
-              "pauseTime": "12:00:00",
-              "resumeTimeAfterPause": "13:00:00",
-              "stoppedByUser": "",
-              "stoppingReason": "None",
-              "message": "",
-              "serverVersionNumber": "4.0",
-              "hostAddress": "https://fastclock.azurewebsites.net"
+              "message": "A message to all of you!",
+              "session": {
+                "weekday": "Wednesday",
+                "time": "06:12:00",
+                "speed": 5.5,
+                "duration": "15:00:00",
+                "breakTime": "14:00:00",
+                "realEndTime": "13:14:00",
+                "fastEndTime": "21:00:00",
+                "isCompleted": false,
+                "isElapsed": false,
+                "isRunning": false
+              },
+              "realtime": {
+                "weekday": "Saturday",
+                "time": "14:31:00"
+              },
+              "stopping": {
+                "userName": "Stefan",
+                "reason": "BoosterError"
+              },
+              "pause": {
+                "isPaused": false,
+                "reason": "Dinner",
+                "time": "12:00:00",
+                "sessionResumeTime": "13:00:00"
+              },
+              "serverVersionNumber": "4.0"
             }
             """;
-        var json = Target.ToJson();
-        //var diff = json.FirstDiff(expected); Debugger.Break();
+        var json = WithAllPropertiesSet.ToJson();
+        var diff = json.FirstDiff(expected); System.Diagnostics.Debugger.Break();
         Assert.AreEqual(expected, json);
         var status = json.ToClockStatus();
-        Assert.AreEqual(Target, status);
+        Assert.AreEqual(WithAllPropertiesSet, status);
     }
 
-    private static ClockStatus Target =>
+    private static ClockStatus WithAllPropertiesSet =>
     new()
     {
         Name = "Demo",
-        Weekday = Weekday.Wednesday,
-        Time = "06:12".ToTimeOnly(),
-        Duration = TimeSpan.FromHours(15),
-        Message = "",
-        RealEndTime = "13:14".ToTimeOnly(),
-        FastEndTime = "21:00".ToTimeOnly(),
-        PauseTime = "12:00".ToTimeOnly(),
-        PauseReason = PauseReason.Dinner,
-        ResumeTimeAfterPause = "13:00".ToTimeOnly(),
-        StoppedByUser = "",
-        Speed = 5.5,
-        StoppingReason = StopReason.None,
+        Message = "A message to all of you!",
         ServerVersionNumber = "4.0",
-        HostAddress = "https://fastclock.azurewebsites.net"
+        Session = new()
+        {
+            Weekday = Weekday.Wednesday,
+            Time = "06:12".ToTimeOnly(),
+            Duration = TimeSpan.FromHours(15),
+            RealEndTime = "13:14".ToTimeOnly(),
+            FastEndTime = "21:00".ToTimeOnly(),
+            Speed = 5.5,
+            BreakTime = "14:00".ToTimeOnly(),
+        },
+        Realtime = new()
+        {
+            Time="14:31".ToTimeOnly(),
+            Weekday = Weekday.Saturday,
+        },
+        Stopping = new()
+        {
+            UserName = "Stefan",
+            Reason = StopReason.BoosterError,
 
+        },
+        Pause = new()
+        {
+            Time = "12:00".ToTimeOnly(),
+            Reason = PauseReason.Dinner,
+            SessionResumeTime = "13:00".ToTimeOnly(),
+
+        },     
+    };
+
+    [TestMethod]
+    public void SerializationAndDeseriaizationWithMinimumPropertiesWorks()
+    {
+        var expected =
+            """
+            {
+              "name": "Demo",
+              "isUnavailable": false,
+              "message": null,
+              "session": {
+                "weekday": "None",
+                "time": "06:12:00",
+                "speed": 5.5,
+                "duration": "15:00:00",
+                "breakTime": null,
+                "realEndTime": "13:14:00",
+                "fastEndTime": "21:00:00",
+                "isCompleted": false,
+                "isElapsed": false,
+                "isRunning": false
+              },
+              "realtime": {
+                "weekday": "Saturday",
+                "time": "14:31:00"
+              },
+              "stopping": null,
+              "pause": null,
+              "serverVersionNumber": "4.0"
+            }
+            """;
+        var json = WithMinimumPropertiesSet.ToJson();
+        var diff = json.FirstDiff(expected); System.Diagnostics.Debugger.Break();
+        Assert.AreEqual(expected, json);
+        var status = json.ToClockStatus();
+        Assert.AreEqual(WithMinimumPropertiesSet, status);
+    }
+    private static ClockStatus WithMinimumPropertiesSet =>
+    new()
+    {
+        Name = "Demo",
+        Message = null,
+        ServerVersionNumber = "4.0",
+        Session = new()
+        {
+            Time = "06:12".ToTimeOnly(),
+            Duration = TimeSpan.FromHours(15),
+            RealEndTime = "13:14".ToTimeOnly(),
+            FastEndTime = "21:00".ToTimeOnly(),
+            Speed = 5.5,
+
+        },
+        Realtime = new()
+        {
+            Time = "14:31".ToTimeOnly(),
+            Weekday = Weekday.Saturday,
+        },
+        Stopping = null,
+        Pause = null,
+        
     };
 }
 

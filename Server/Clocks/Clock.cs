@@ -1,6 +1,7 @@
 ﻿using Fastclock.Contracts;
 using Fastclock.Contracts.Extensions;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Timers;
 using static Fastclock.Contracts.Extensions.TimeZoneInfoExtensions;
@@ -40,28 +41,70 @@ public class Clock : IDisposable, IClock
 
     public event EventHandler<string>? OnUpdate;
     public string Name { get; init; }
-    public ClockSettings Settings { get; init; } = new ClockSettings();
-    public ClockStatus Status => new()
+    public ClockSettings Settings => new()
     {
-        ClockMode = Mode,
-        Duration = SessionDuration,
-        ResumeTimeAfterPause = ResumeAfterPauseTime,
-        FastEndTime = FastEndTime,
-        IsCompleted = IsCompleted,
-        IsElapsed = Elapsed > StartTime.ToTimeSpan(),
-        IsPaused = IsPaused,
-        IsRunning = IsRunning,
-        Message = Message,
         Name = Name,
+        AdministratorPassword = AdministratorPassword,
+        UserPassword = UserPassword,
+        Mode = Mode,
+        StartWeekday = StartWeekday,
+        StartTime = StartTime,
+        Duration = SessionDuration,
+        Speed = Speed,
+        Message = Message,
         PauseReason = PauseReason,
         PauseTime = PauseTime,
-        RealEndTime = RealEndTime,
-        Speed = Speed,
-        StoppedByUser = StoppingUser ?? "",
-        StoppingReason = StoppingReason,
-        Weekday = Weekday,
-        Time = Time,
+        ResumeAfterPauseTime = ResumeAfterPauseTime,
+        ShowRealtimeDuringPause = ShowRealtimeDuringPause,
+        TimeZoneId = _timeZone.Id
+
     };
+    public ClockStatus Status
+    {
+        get
+        {
+            var status = new ClockStatus
+            {
+                Name = Name,
+                Message = Message,
+                ServerVersionNumber = Assembly.GetAssembly(typeof(Clock))?.GetName().Version?.ToString() ?? "",
+            };
+
+            status.Session.Duration = SessionDuration;
+            status.Session.Speed = Speed;
+            status.Session.Weekday = Weekday;
+            status.Session.FastEndTime = FastEndTime;
+            status.Session.RealEndTime = RealEndTime;
+            status.Session.Time = Time;
+            status.Session.IsCompleted = IsCompleted;
+            status.Session.IsElapsed = IsElapsed;
+            status.Session.IsRunning = IsRunning;
+
+            status.Realtime.Weekday = Weekday.None; // TODO: Get real weekday
+            status.Realtime.Time = RealTime;
+            if (IsStopped)
+            {
+                status.Stopping = new()
+                {
+                    UserName = StoppingUser,
+                    Reason = StoppingReason,
+
+                };
+            }
+            if (PauseTime.HasValue)
+            {
+                status.Pause = new()
+                {
+                    IsPaused = IsPaused,
+                    Time = PauseTime,
+                    Reason = PauseReason,
+                    SessionResumeTime = ResumeAfterPauseTime,
+
+                };
+            }
+            return status;
+        }
+    }
 
     public IEnumerable<ClockUser> ClockUsers => _clients;
 
@@ -141,10 +184,12 @@ public class Clock : IDisposable, IClock
 
     public bool IsUser(string? password, bool requirePassword = false) =>
         IsAdministrator(password) ||
-        requirePassword ? UserPassword.HasValue() && password.IsSameAs(UserPassword) :
-        password.IsSameAs(UserPassword);
+        (requirePassword ? UserPassword.HasValue() && password.IsSameAs(UserPassword) : password.IsSameAs(UserPassword));
 
     public bool IsAdministrator(string? password) => password.HasValue() && password.IsSameAs(AdministratorPassword);
+
+   private bool IsStoppingUser(string? userName, string? password) =>
+        IsUser(password) && userName.IsSameAs(StoppingUser);
 
     public bool TryStartTick(string? userName, string? password)
     {
@@ -239,14 +284,14 @@ public class Clock : IDisposable, IClock
             if (OnUpdate is not null) OnUpdate(this, Name);
     }
 
-    private bool IsStoppingUser(string? userName, string? password) =>
-        IsUser(password) && userName.IsSameAs(StoppingUser);
-
+ 
 
     internal bool IsRunning { get; private set; }
+    internal bool IsStopped => (IsElapsed && !IsCompleted && !IsRunning);
     internal bool IsPaused { get; private set; }
     internal bool IsCompleted => Elapsed >= SessionDuration;
     internal bool IsRealtime => Mode.IsReal();
+    internal bool IsElapsed => Elapsed > TimeSpan.Zero;
 
     internal string AdministratorPassword { get; set; }
     internal string UserPassword { get; private set; }

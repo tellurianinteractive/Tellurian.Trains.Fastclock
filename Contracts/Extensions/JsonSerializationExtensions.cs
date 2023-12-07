@@ -17,11 +17,11 @@ public static class JsonSerializationExtensions
 
 
     public static string ToJson(this ClockSettings settings) => JsonSerializer.Serialize(settings, Options);
-    public static ClockSettings? ToClockSettings(this string json) => JsonSerializer.Deserialize<ClockSettings>(json, Options);
+    public static ClockSettings? ToClockSettings(this Json json) => JsonSerializer.Deserialize<ClockSettings>(json, Options);
 
     public static string ToJson(this ClockStatus status) => JsonSerializer.Serialize(status, Options);
-    public static ClockStatus? ToClockStatus(this string json) => JsonSerializer.Deserialize<ClockStatus>(json, Options);
+    public static ClockStatus? ToClockStatus(this Json json) => JsonSerializer.Deserialize<ClockStatus>(json, Options);
 
     public static string ToJson(this ClockUser user) => JsonSerializer.Serialize(user, Options);
-    public static ClockUser? ToClockUser(this string json) => JsonSerializer.Deserialize<ClockUser>(json, Options);
+    public static ClockUser? ToClockUser(this Json json) => JsonSerializer.Deserialize<ClockUser>(json, Options);
 }

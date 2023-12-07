@@ -3,7 +3,7 @@
 public interface IClock
 {
     string Name { get; init; }
-    ClockSettings Settings { get; init; }
+    ClockSettings Settings { get; }
     ClockStatus Status { get; }
     IEnumerable<ClockUser> ClockUsers { get; }
 

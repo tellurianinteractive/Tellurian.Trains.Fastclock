@@ -44,7 +44,7 @@ public class ClockSettingsTests
         {
             AdministratorPassword = "password",
             Duration = (15.0).AsTotalHours(),
-            Mode = ClockMode.Fast,
+            Mode = TimeSource.Fast,
             Name = "Demo",
             Speed = 5.5,
             UserPassword = "password",

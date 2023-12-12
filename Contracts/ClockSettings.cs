@@ -17,7 +17,7 @@ public record ClockSettings
     /// </summary>
     [Display(Name = "ClockMode", ResourceType = typeof(Strings))]
     [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Strings))]
-    public ClockMode Mode { get; set; }
+    public TimeSource Mode { get; set; }
     /// <summary>
     /// True if clock should resume game from start time.
     /// </summary>

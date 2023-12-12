@@ -4,7 +4,6 @@ using Fastclock.Server.Clocks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Fastclock.Contracts.Extensions.TimeZoneInfoExtensions;
 
 namespace Fastclock.Server.Tests;
@@ -12,8 +11,8 @@ namespace Fastclock.Server.Tests;
 [TestClass]
 public class ClockTests
 {
-    readonly IOptions<ClockConfiguration> ClockOptions = Options.Create(ClockConfiguration);
     readonly ILogger<Clock> Logger = new NullLogger<Clock>();
+
     [TestMethod]
     public void AddsNewUser()
     {
@@ -53,8 +52,9 @@ public class ClockTests
     [TestMethod]
     public void ClockFromConfiguration()
     {
-        var now = CreateTimeZoneInfo().Now();
-        var target = CreateClock(ClockConfiguration);
+        var configuration = ClockConfiguration;
+        var now = CreateTimeZoneInfo(configuration.TimeZoneId).Now();
+        var target = CreateClock(configuration);
         var status = target.Status;
         Assert.AreEqual("Demo", status.Name);
         Assert.AreEqual("06:00".ToTimeOnly(), status.Session.Time);
@@ -62,15 +62,18 @@ public class ClockTests
         Assert.AreEqual(5.5, status.Session.Speed);
         Assert.AreEqual("21:00".ToTimeOnly(), status.Session.FastEndTime);
         Assert.AreEqual(new TimeOnly(now.Hour, now.Minute).Add(TimeSpan.FromHours(status.Session.Duration.TotalHours / status.Session.Speed)), status.Session.RealEndTime);
+        Assert.AreEqual(new TimeOnly(now.Hour, now.Minute), status.Realtime.Time);
+        Assert.AreEqual(now.DayOfWeek == 0 ? 7 : (int)now.DayOfWeek, (int)status.Realtime.Weekday);
         Assert.AreEqual(Weekday.Thursday, status.Session.Weekday);
     }
 
     [TestMethod]
     public void DemoClockAfterSettingsUpdate()
     {
-        var now = CreateTimeZoneInfo().Now();
-        var target = CreateClock(ClockConfiguration);
-        var updated = target.UpdateSettings("192.168.1.2", "Stefan", "password", ClockSettings with { Name="Demo", AdministratorPassword="password"});
+        var configuration = ClockConfiguration;
+        var now = CreateTimeZoneInfo(configuration.TimeZoneId).Now();
+        var target = CreateClock(configuration);
+        var updated = target.UpdateSettings("192.168.1.2", "Stefan", "password", ClockSettings with { Name = "Demo", AdministratorPassword = "password" });
         Assert.IsTrue(updated, "Not updated.");
         var settings = target.Settings;
         var status = target.Status;
@@ -86,19 +89,19 @@ public class ClockTests
     [TestMethod]
     public async Task RunDemoClockFromConfiguration()
     {
-        var target = CreateClock(ClockConfiguration with { Speed=10});
+        var target = CreateClock(ClockConfiguration with { Speed = 50 });
         target.TryStartTick("Stefan", "password");
-        await Task.Delay(6500);
-        Assert.IsTrue(((Clock)target).IsRunning);
+        await Task.Delay(2000);
+        Assert.IsTrue(target.IsRunning);
         target.TryStopTick("Stefan", "password", StopReason.None);
-        Assert.IsTrue(((Clock)target).IsElapsed, "Not elapsed.");
-        Assert.IsTrue(((Clock)target).IsStopped, "Not stopped.");
+        Assert.IsTrue(target.IsElapsed, "Not elapsed.");
+        Assert.IsTrue(target.IsStopped, "Not stopped.");
         var status = target.Status;
         Assert.AreEqual("06:01".ToTimeOnly(), status.Session.Time);
 
     }
 
-    private IClock CreateClock(ClockConfiguration configuration) => new Clock(Options.Create(configuration), Logger);
+    private Clock CreateClock(ClockConfiguration configuration) => new Clock(Options.Create(configuration), Logger);
 
     private static ClockConfiguration ClockConfiguration { get; } = new()
     {
@@ -123,8 +126,5 @@ public class ClockTests
         Speed = 4.0,
         AdministratorPassword = "admin",
         UserPassword = "user",
-    
-         
-
     };
 }

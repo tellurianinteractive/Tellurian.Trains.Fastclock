@@ -38,9 +38,10 @@ public class Clock : IDisposable, IClock
         _clockTimer.Elapsed += Tick;
     }
 
-
     public event EventHandler<string>? OnUpdate;
+
     public string Name { get; init; }
+
     public ClockSettings Settings => new()
     {
         Name = Name,
@@ -59,6 +60,7 @@ public class Clock : IDisposable, IClock
         TimeZoneId = _timeZone.Id
 
     };
+
     public ClockStatus Status
     {
         get
@@ -80,8 +82,9 @@ public class Clock : IDisposable, IClock
             status.Session.IsElapsed = IsElapsed;
             status.Session.IsRunning = IsRunning;
 
-            status.Realtime.Weekday = Weekday.None; // TODO: Get real weekday
+            status.Realtime.Weekday = RealWeekday;
             status.Realtime.Time = RealTime;
+
             if (IsStopped)
             {
                 status.Stopping = new()
@@ -251,7 +254,7 @@ public class Clock : IDisposable, IClock
             PauseTime = null;
             ResumeAfterPauseTime = null;
             PauseReason = PauseReason.None;
-            Mode = ClockMode.Fast;
+            Mode = TimeSource.Fast;
         }
     }
 
@@ -269,7 +272,7 @@ public class Clock : IDisposable, IClock
         if (RealTime >= PauseTime)
         {
             IsPaused = true;
-            Mode = ShowRealtimeDuringPause ? ClockMode.Real : ClockMode.Fast;
+            Mode = ShowRealtimeDuringPause ? TimeSource.Real : TimeSource.Fast;
             StopTick();
         }
         if (IsCompleted)
@@ -295,14 +298,14 @@ public class Clock : IDisposable, IClock
 
     internal string AdministratorPassword { get; set; }
     internal string UserPassword { get; private set; }
-    internal ClockMode Mode { get; private set; }
+    internal TimeSource Mode { get; private set; }
     internal Weekday StartWeekday { get; private set; }
     internal Weekday Weekday => StartWeekday == Weekday.None ? Weekday.None : (Weekday)((int)StartWeekday + StartTime.Hour / 24 + Elapsed.Hours / 24);
     internal TimeOnly StartTime { get; private set; }
     internal TimeSpan StartDayAndTime { get; private set; }
     internal TimeSpan SessionDuration { get; private set; }
     internal TimeSpan Elapsed { get; private set; }
-    internal TimeOnly Time => StartTime.Add(Elapsed, out _);
+    internal TimeOnly Time => StartTime.AddMinutes(Math.Round(Elapsed.TotalMinutes, 0, MidpointRounding.ToZero), out _);
     internal double Speed { get; private set; }
     internal TimeOnly? PauseTime { get; private set; }
     internal PauseReason PauseReason { get; private set; }
@@ -325,6 +328,8 @@ public class Clock : IDisposable, IClock
             return new TimeOnly(now.Hours, now.Minutes);
         }
     }
+
+    internal Weekday RealWeekday => (Weekday)(RealDayAndTime.Days % 7);
     internal TimeSpan RealDayAndTime
     {
         get

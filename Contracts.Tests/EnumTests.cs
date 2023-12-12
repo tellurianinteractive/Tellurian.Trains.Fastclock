@@ -6,10 +6,18 @@ namespace Fastclock.Contracts.Tests;
 public class EnumTests
 {
     [TestMethod]
-    public void ListsClockModes()
+    public void ListsDisplayModes()
+    {
+        string[] expected = ["Digital", "Analogue"];
+        var actual = Items<DisplayMode>();
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    [TestMethod]
+    public void ListsTimeSources()
     {
         string[] expected = ["Fast", "Real"];
-        var actual = Items<ClockMode>();
+        var actual = Items<TimeSource>();
         CollectionAssert.AreEqual(expected, actual);
     }
 

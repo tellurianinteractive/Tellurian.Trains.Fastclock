@@ -4,9 +4,10 @@
     <input type="checkbox" id="navmenu-toggle" />
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Width="200" Collapsible="true" Title="@Localizer["NavigationMenu"]" @bind-Expanded="expanded">
-             <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">@Localizer["Home"]</FluentNavLink>
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">@Localizer["Home"]</FluentNavLink>
             <FluentNavLink Href="clock" Icon="@(new Icons.Regular.Size20.Clock())" IconColor="Color.Accent">@Localizer["Clock"]</FluentNavLink>
-             <FluentNavLink Href="settings" Icon="@(new Icons.Regular.Size20.Settings())" IconColor="Color.Accent">@Localizer["Settings"]</FluentNavLink>
+            <FluentNavLink Href="settings" Icon="@(new Icons.Regular.Size20.Settings())" IconColor="Color.Accent">@Localizer["Settings"]</FluentNavLink>
+            <FluentNavLink Href="about" Icon="@(new Icons.Regular.Size20.Info())" IconColor="Color.Accent">@Localizer["About"]</FluentNavLink>
         </FluentNavMenu>
     </nav>
 </div>

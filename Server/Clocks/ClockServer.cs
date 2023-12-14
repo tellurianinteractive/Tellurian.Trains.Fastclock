@@ -22,7 +22,8 @@ public class ClockServer
             {
                 "DEMO",
                 new Clock(options,  logger) {
-                    Name = "Demo", AdministratorPassword = "password"
+                    Name = "Demo", 
+                    AdministratorPassword = "password",
                 }
             }
         };
@@ -49,7 +50,7 @@ public class ClockServer
         }
     }
 
-    public IClock? Instance(string? name)
+    public  IClock? Instance(string? name)
     {
         lock (_clocks)
         {

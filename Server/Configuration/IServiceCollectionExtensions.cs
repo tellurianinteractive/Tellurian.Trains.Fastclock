@@ -1,4 +1,7 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Fastclock.Contracts.Extensions;
+using Microsoft.AspNetCore.Http.Json;
+using Microsoft.OpenApi.Models;
+using static Fastclock.Contracts.Extensions.JsonSerializationExtensions;
 
 namespace Fastclock.Server.Configuration;
 
@@ -26,4 +29,11 @@ public static class IServiceCollectionExtensions
             c.EnableAnnotations();
         });
 
+    /// <summary>
+    /// Configures JSON serialization opttions accoring definition in contracts.
+    /// </summary>
+    /// <returns></returns>
+    public static IServiceCollection CustomizeJsonSerialization(this IServiceCollection services) =>
+        services.Configure<JsonOptions>(options =>
+        options.SerializerOptions.SetDefault());
 }

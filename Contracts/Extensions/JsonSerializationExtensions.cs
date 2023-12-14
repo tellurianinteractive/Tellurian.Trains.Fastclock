@@ -14,6 +14,15 @@ public static class JsonSerializationExtensions
         PreferredObjectCreationHandling = System.Text.Json.Serialization.JsonObjectCreationHandling.Populate,
     };
 
+    public static void SetDefault(this JsonSerializerOptions options)
+    {
+        options.WriteIndented = Options.WriteIndented;
+        options.PropertyNamingPolicy = Options.PropertyNamingPolicy;
+        options.PropertyNameCaseInsensitive = Options.PropertyNameCaseInsensitive;
+        options.PreferredObjectCreationHandling = Options.PreferredObjectCreationHandling;
+    }
+
+
 
 
     public static string ToJson(this ClockSettings settings) => JsonSerializer.Serialize(settings, Options);

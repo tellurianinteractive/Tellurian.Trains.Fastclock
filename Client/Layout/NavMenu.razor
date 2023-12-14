@@ -1,0 +1,15 @@
+﻿@inject IStringLocalizer<App> Localizer
+
+<div class="navmenu">
+    <input type="checkbox" id="navmenu-toggle" />
+    <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
+        <FluentNavMenu Id="main-menu" Width="200" Collapsible="true" Title="@Localizer["NavigationMenu"]" @bind-Expanded="expanded">
+             <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">@Localizer["Home"]</FluentNavLink>
+            <FluentNavLink Href="clock" Icon="@(new Icons.Regular.Size20.Clock())" IconColor="Color.Accent">@Localizer["Clock"]</FluentNavLink>
+             <FluentNavLink Href="settings" Icon="@(new Icons.Regular.Size20.Settings())" IconColor="Color.Accent">@Localizer["Settings"]</FluentNavLink>
+        </FluentNavMenu>
+    </nav>
+</div>
+@code {
+    private bool expanded = true;
+}

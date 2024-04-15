@@ -1,6 +1,6 @@
 # Fastclock App 4
 **Version 4 is an almost complete rewrite of the Fastclock app.** 
-> NOTE: THIS VERSIOn IS WORD IN PROGRESS AND IS NOT RELEASED.
+> NOTE: THIS VERSION IS WORK IN PROGRESS AND IS NOT RELEASED.
 > The source code for the current Fastclock app is found [here](https://github.com/tellurianinteractive/Tellurian.Trains.ModuleMeetingApp).
 
 > NOTE: Version 4 API is incompatible with version 3 API. 

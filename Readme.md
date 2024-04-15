@@ -17,10 +17,7 @@ The new take also helps to make the app more maintalable and adds a few new feat
 - The API is upgraded for better structure and new features. 
 - The server app code is greatly simplified and with better testing.
 
-### Added features
-- Stopping the clock for pauses at a real time for lunch etc. was supported earlier.
-Now it is also possible to set a fast time when the clock should stop for a break.
-This is especially useful when sessions are split in parts with a pause in between.
+### Planned additional features
 - Synching of locally running clock to slave cloud clock, which give users access to local clock without connecting to local WLAN and thereby loosing Internet access.
 - Synching of cloud clock to locally running slave clock, which gives other local computers and users access without accessing Internet.
 - Real time is now configurable to be in a named time zone.
